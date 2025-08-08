@@ -121,7 +121,7 @@ function App() {
 
   // Utility functions
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString + 'T00:00:00'); // Add T00:00:00 to ensure UTC interpretation
     return date.toLocaleDateString('pt-BR', {
       weekday: 'long',
       year: 'numeric',
@@ -173,7 +173,7 @@ function App() {
       const remainingDates = dates.filter(d => d.id !== dateId);
       
       // Generate next Saturday after the last remaining date
-      const lastDate = new Date(Math.max(...remainingDates.map(d => new Date(d.date))));
+      const lastDate = new Date(Math.max(...remainingDates.map(d => new Date(d.date + 'T00:00:00')))); // Add T00:00:00
       const nextSaturday = new Date(lastDate);
       nextSaturday.setDate(nextSaturday.getDate() + 14);
       
@@ -184,7 +184,7 @@ function App() {
       };
       
       // Update dates (remove completed, add new)
-      const updatedDates = [...remainingDates, newDate].sort((a, b) => new Date(a.date) - new Date(b.date));
+      const updatedDates = [...remainingDates, newDate].sort((a, b) => new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00')); // Add T00:00:00
       setDates(updatedDates);
       
       // Remove allocations for completed date
@@ -212,7 +212,7 @@ function App() {
       // Update dates
       setDates(prev => prev.map(d => 
         d.id === dateId ? { ...d, date: newDateValue, id: newDateValue } : d
-      ).sort((a, b) => new Date(a.date) - new Date(b.date)));
+      ).sort((a, b) => new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00'))); // Add T00:00:00
       
       // Update availability
       setAvailability(prev => prev.map(vol => ({
@@ -405,7 +405,12 @@ function App() {
                     size="sm"
                     onClick={() => {
                       // Ensure the date is in YYYY-MM-DD format for the input type="date"
-                      const formattedDate = dateObj.date;
+                      // and handle timezone offset for consistent display
+                      const date = new Date(dateObj.date);
+                      const year = date.getFullYear();
+                      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                      const day = date.getDate().toString().padStart(2, '0');
+                      const formattedDate = `${year}-${month}-${day}`;
                       setEditingDate({ ...dateObj, date: formattedDate });
                       setShowEditDate(true);
                     }}
@@ -759,4 +764,6 @@ function App() {
 }
 
 export default App;
+
+
 
