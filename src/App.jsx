@@ -6,13 +6,13 @@ import { Label } from './components/ui/label';
 import { Checkbox } from './components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './components/ui/dialog';
 import { Badge } from './components/ui/badge';
-import { 
-  Calendar, 
-  Users, 
-  UserPlus, 
-  RefreshCw, 
-  Edit2, 
-  Check, 
+import {
+  Calendar,
+  Users,
+  UserPlus,
+  RefreshCw,
+  Edit2,
+  Check,
   X,
   LogOut,
   Trash2
@@ -23,7 +23,7 @@ import './App.css';
 // Fixed functions that always appear
 const FIXED_FUNCTIONS = [
   'Equipe do Cuscuz',
-  'Expositor', 
+  'Expositor',
   'Recepção',
   'Salão',
   'Evangelização Infantil'
@@ -78,9 +78,9 @@ const initialMockData = {
 const showToast = (message, type = 'success') => {
   const toast = document.createElement('div');
   toast.className = `fixed top-4 right-4 z-50 p-4 rounded-md text-white font-medium ${
-    type === 'success' ? 'bg-green-600' : 
-    type === 'error' ? 'bg-red-600' : 
-    type === 'warning' ? 'bg-yellow-600' : 
+    type === 'success' ? 'bg-green-600' :
+    type === 'error' ? 'bg-red-600' :
+    type === 'warning' ? 'bg-yellow-600' :
     'bg-blue-600'
   }`;
   toast.textContent = message;
@@ -404,7 +404,9 @@ function App() {
                     variant="ghost"
                     size="sm"
                     onClick={() => {
-                      setEditingDate(dateObj);
+                      // Ensure the date is in YYYY-MM-DD format for the input type="date"
+                      const formattedDate = dateObj.date;
+                      setEditingDate({ ...dateObj, date: formattedDate });
                       setShowEditDate(true);
                     }}
                   >
