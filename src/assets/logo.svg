@@ -1,0 +1,13 @@
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="30" cy="30" r="28" fill="#2E8B57" stroke="#90EE90" stroke-width="2"/>
+  
+  <!-- Heart shape -->
+  <path d="M30 45C30 45 15 35 15 25C15 20 19 16 24 16C26.5 16 28.5 17.5 30 19.5C31.5 17.5 33.5 16 36 16C41 16 45 20 45 25C45 35 30 45 30 45Z" fill="#FFFFFF"/>
+  
+  <!-- Hands -->
+  <path d="M22 30L26 26M34 26L38 30" stroke="#2E8B57" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="22" cy="30" r="2" fill="#2E8B57"/>
+  <circle cx="38" cy="30" r="2" fill="#2E8B57"/>
+</svg>
+
