@@ -1,7 +1,7 @@
 // API configuration for N8N integration
 const API_CONFIG = {
   // N8N webhook URLs - replace with actual N8N webhook URLs
-  baseUrl: process.env.REACT_APP_N8N_BASE_URL || 'https://your-n8n-instance.com/webhook',
+  baseUrl: process.env.REACT_APP_N8N_BASE_URL || 'https://n8n.escolaamadeus.com/webhook-test/get-dates',
   endpoints: {
     // Webhook endpoints for different operations
     getDates: '/get-dates',
