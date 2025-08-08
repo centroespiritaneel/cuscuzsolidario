@@ -316,6 +316,50 @@ function App() {
     showToast(`Disponibilidade de ${volunteerName} removida para ${formatDate(dateToRemove)}`, 'info');
   };
 
+  // New function for volunteers to remove their own availability
+  const removeMyAvailability = (dateToRemove) => {
+    if (!volunteerName.trim()) {
+      showToast('Por favor, digite seu nome primeiro.', 'warning');
+      return;
+    }
+    
+    const volunteerExists = availability.find(vol => vol.name === volunteerName);
+    if (!volunteerExists) {
+      showToast('Você não está cadastrado no sistema.', 'warning');
+      return;
+    }
+    
+    const hasAvailability = volunteerExists.dates.includes(dateToRemove);
+    if (!hasAvailability) {
+      showToast('Você não está disponível para esta data.', 'warning');
+      return;
+    }
+    
+    // Remove from selectedDates if it's there
+    setSelectedDates(prev => prev.filter(date => date !== dateToRemove));
+    
+    // Remove from availability state
+    setAvailability(prev => prev.map(vol => 
+      vol.name === volunteerName 
+        ? { ...vol, dates: vol.dates.filter(date => date !== dateToRemove) }
+        : vol
+    ));
+    
+    // Also remove any allocations for this volunteer on this date
+    setAllocations(prev => prev.filter(alloc => 
+      !(alloc.person === volunteerName && alloc.date === dateToRemove)
+    ));
+    
+    showToast(`Sua disponibilidade foi removida para ${formatDate(dateToRemove)}`, 'info');
+  };
+
+  // Get current volunteer's availability for display
+  const getCurrentVolunteerAvailability = () => {
+    if (!volunteerName.trim()) return [];
+    const volunteer = availability.find(vol => vol.name === volunteerName);
+    return volunteer ? volunteer.dates : [];
+  };
+
   // Allocation functions
   const allocateVolunteer = async (date, func, person) => {
     setLoading(true);
@@ -625,6 +669,50 @@ function App() {
           </CardContent>
         </Card>
 
+        {/* Current Volunteer's Availability - Only show for volunteers */}
+        {userType === 'volunteer' && volunteerName.trim() && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Suas Disponibilidades
+              </CardTitle>
+              <p className="text-muted-foreground">
+                Datas em que você está disponível. Clique no X para remover uma data.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {getCurrentVolunteerAvailability().length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {getCurrentVolunteerAvailability().map(date => (
+                      <div key={date} className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-md">
+                        <span className="text-sm font-medium text-green-800">
+                          {formatDate(date)}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeMyAvailability(date)}
+                          className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>Você ainda não se disponibilizou para nenhuma data.</p>
+                    <p className="text-sm">Use o formulário acima para marcar sua disponibilidade.</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Coordinator Controls */}
         {userType === 'coordinator' && (
           <Card>
@@ -764,6 +852,8 @@ function App() {
 }
 
 export default App;
+
+
 
 
 
